@@ -27,7 +27,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    // List employees & display registration form (supports optional keyword search)
+    // GET /employees - List employees & display registration form (supports search)
     @GetMapping({"/", "/employees"})
     public String listEmployees(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
         List<Employee> employees = employeeService.searchEmployees(keyword);
@@ -40,8 +40,8 @@ public class EmployeeController {
         return "employees";
     }
 
-    // Create a new employee with validation
-    @PostMapping("/employees/save")
+    // POST /employees - Save a new employee with validation (Create)
+    @PostMapping({"/employees", "/employees/save"})
     public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee,
                                BindingResult result,
                                Model model,
@@ -62,8 +62,8 @@ public class EmployeeController {
         return "redirect:/employees";
     }
 
-    // Show form to edit an existing employee
-    @GetMapping("/employees/edit/{id}")
+    // GET /employees/{id}/edit - Show edit form filled with employee data
+    @GetMapping({"/employees/{id}/edit", "/employees/edit/{id}"})
     public String showEditForm(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Employee> employee = employeeService.getEmployeeById(id);
         if (employee.isEmpty()) {
@@ -74,8 +74,8 @@ public class EmployeeController {
         return "edit-employee";
     }
 
-    // Update employee with validation
-    @PostMapping("/employees/update/{id}")
+    // POST /employees/{id}/update - Save changes (Update)
+    @PostMapping({"/employees/{id}/update", "/employees/update/{id}"})
     public String updateEmployee(@PathVariable("id") Long id,
                                  @Valid @ModelAttribute("employee") Employee employee,
                                  BindingResult result,
@@ -96,9 +96,16 @@ public class EmployeeController {
         return "redirect:/employees";
     }
 
-    // Delete an employee
-    @GetMapping("/employees/delete/{id}")
-    public String deleteEmployee(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    // POST /employees/{id}/delete & GET /employees/{id}/delete - Remove employee (Delete)
+    @PostMapping({"/employees/{id}/delete", "/employees/delete/{id}"})
+    public String deleteEmployeePost(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        employeeService.deleteEmployeeById(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Employee deleted successfully!");
+        return "redirect:/employees";
+    }
+
+    @GetMapping({"/employees/{id}/delete", "/employees/delete/{id}"})
+    public String deleteEmployeeGet(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         employeeService.deleteEmployeeById(id);
         redirectAttributes.addFlashAttribute("successMessage", "Employee deleted successfully!");
         return "redirect:/employees";
