@@ -28,7 +28,7 @@ public class EmployeeController {
     }
 
     // GET /employees - List employees & display registration form (supports search)
-    @GetMapping({"/", "/employees"})
+    @GetMapping({"/", "/employees", "/employees/"})
     public String listEmployees(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
         List<Employee> employees = employeeService.searchEmployees(keyword);
         model.addAttribute("employees", employees);
@@ -41,7 +41,7 @@ public class EmployeeController {
     }
 
     // POST /employees - Save a new employee with validation (Create)
-    @PostMapping({"/employees", "/employees/save"})
+    @PostMapping({"/employees", "/employees/", "/employees/save"})
     public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee,
                                BindingResult result,
                                Model model,

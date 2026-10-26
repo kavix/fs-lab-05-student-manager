@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/employees")
+@RequestMapping({"/api/employees", "/api/employees/"})
 public class EmployeeRestController {
 
     private final EmployeeService employeeService;
@@ -30,19 +30,19 @@ public class EmployeeRestController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping
+    @GetMapping({"", "/"})
     public List<Employee> getAll(@RequestParam(value = "keyword", required = false) String keyword) {
         return employeeService.searchEmployees(keyword);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping({"/{id}", "/{id}/"})
     public ResponseEntity<Employee> getById(@PathVariable Long id) {
         Optional<Employee> employee = employeeService.getEmployeeById(id);
         return employee.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping({"", "/"})
     public ResponseEntity<?> create(@Valid @RequestBody Employee employee) {
         if (employeeService.isEmailRegistered(employee.getEmail(), null)) {
             return ResponseEntity.badRequest().body("This email is already registered");
@@ -51,7 +51,7 @@ public class EmployeeRestController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping({"/{id}", "/{id}/"})
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody Employee employee) {
         if (employeeService.getEmployeeById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -64,7 +64,7 @@ public class EmployeeRestController {
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping({"/{id}", "/{id}/"})
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (employeeService.getEmployeeById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
