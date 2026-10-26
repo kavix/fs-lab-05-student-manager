@@ -40,9 +40,9 @@ spring.datasource.password=your_password
 ```
 
 ### 3. Run the Application
-Run `EmployeeManagerApplication.java` from your IDE, or using Gradle:
+Run `EmployeeManagerApplication.java` from your IDE, or using Maven Wrapper:
 ```bash
-./gradlew bootRun
+./mvnw spring-boot:run
 ```
 
 ### 4. Access the Web Application
