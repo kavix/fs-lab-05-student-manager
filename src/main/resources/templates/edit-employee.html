@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: header-links}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0 fw-bold text-primary">Edit Employee</h5>
+                    <a th:href="@{/employees}" class="btn btn-sm btn-outline-secondary">Back to List</a>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/employees/update/{id}(id=*{id})}" th:object="${employee}" method="post">
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label fw-semibold">Full Name</label>
+                            <input type="text" class="form-control" th:field="*{fullName}" id="fullName">
+                            <span class="text-danger small" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">Email</label>
+                            <input type="email" class="form-control" th:field="*{email}" id="email">
+                            <span class="text-danger small" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label fw-semibold">Phone Number</label>
+                                <input type="text" class="form-control" th:field="*{phone}" id="phone">
+                                <span class="text-danger small" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="department" class="form-label fw-semibold">Department</label>
+                                <input type="text" class="form-control" th:field="*{department}" id="department">
+                                <span class="text-danger small" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="salary" class="form-label fw-semibold">Salary</label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{salary}" id="salary">
+                            <span class="text-danger small" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></span>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-warning px-4">Update Employee</button>
+                            <a th:href="@{/employees}" class="btn btn-secondary px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

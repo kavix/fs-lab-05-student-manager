@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: header-links}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container pb-5">
+    <!-- Success Banner -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Error Banner -->
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Registration Card -->
+    <div class="card mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title mb-0 fw-bold text-primary">Register New Employee</h5>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/employees/save}" th:object="${employee}" method="post">
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" th:field="*{fullName}" id="fullName" placeholder="John Doe">
+                        <span class="text-danger small" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{email}" id="email" placeholder="john.doe@example.com">
+                        <span class="text-danger small" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" th:field="*{phone}" id="phone" placeholder="0771234567">
+                        <span class="text-danger small" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="department" class="form-label">Department</label>
+                        <input type="text" class="form-control" th:field="*{department}" id="department" placeholder="Engineering">
+                        <span class="text-danger small" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="salary" class="form-label">Salary</label>
+                        <input type="number" step="0.01" class="form-control" th:field="*{salary}" id="salary" placeholder="50000.00">
+                        <span class="text-danger small" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></span>
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <button type="submit" class="btn btn-primary px-4">Save Employee</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="card">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h5 class="card-title mb-0 fw-bold">Employees List</h5>
+                <small class="text-muted">Total Employees: <strong class="text-primary" th:text="${employeeCount}">0</strong></small>
+            </div>
+
+            <!-- Task 11 Search Form -->
+            <form th:action="@{/employees}" method="get" class="d-flex gap-2">
+                <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-sm" placeholder="Search by name...">
+                <button type="submit" class="btn btn-outline-primary btn-sm">Search</button>
+                <a th:if="${keyword != null and keyword != ''}" th:href="@{/employees}" class="btn btn-outline-secondary btn-sm">Reset</a>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">#ID</th>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Salary</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${employees.empty}">
+                        <td colspan="7" class="text-center py-4 text-muted">No employees found.</td>
+                    </tr>
+                    <tr th:each="emp : ${employees}">
+                        <td th:text="${emp.id}">1</td>
+                        <td class="fw-semibold" th:text="${emp.fullName}">Jane Doe</td>
+                        <td th:text="${emp.email}">jane@example.com</td>
+                        <td th:text="${emp.phone}">0771234567</td>
+                        <td><span class="badge bg-secondary" th:text="${emp.department}">HR</span></td>
+                        <td th:text="${#numbers.formatDecimal(emp.salary, 1, 2)}">65000.00</td>
+                        <td class="text-center">
+                            <a th:href="@{/employees/edit/{id}(id=${emp.id})}" class="btn btn-sm btn-outline-warning me-1">Edit</a>
+                            <a th:href="@{/employees/delete/{id}(id=${emp.id})}"
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('Are you sure you want to delete this employee?');">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
