@@ -34,3 +34,8 @@ build/
 
 ### Secrets ###
 secrets.properties
+
+### Documents ###
+*.docx
+*.pdf
+
